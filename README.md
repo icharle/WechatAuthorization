@@ -1,0 +1,2 @@
+# WechatAuthorization
+基于微信小程序登录授权机制延伸第三方平台使用
