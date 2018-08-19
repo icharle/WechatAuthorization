@@ -18,5 +18,5 @@ use Illuminate\Http\Request;
 //});
 
 Route::group(['middleware' => 'api'], function () {
-    Route::get('GetQrcode','IndexController@GetQrcode');
+    Route::get('GetQrcode','WechatController@GetQrcode');
 });
