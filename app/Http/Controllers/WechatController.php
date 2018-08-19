@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\LoginInfo;
 use App\User;
 use Carbon\Carbon;
 use Icharle\Wxtool\Wxtool;
@@ -13,7 +14,7 @@ class WechatController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['GetQrcode','GetToken']]);
+        $this->middleware('auth:api', ['except' => ['GetQrcode', 'GetToken']]);
     }
 
     /**
@@ -24,12 +25,11 @@ class WechatController extends Controller
     public function GetQrcode(Request $request)
     {
         $wechat = new Wxtool();
-        $scene = uniqid().mt_rand(100000,999999);             // 场景值(随机生成)
+        $scene = uniqid() . mt_rand(100000, 999999);             // 场景值(随机生成)
         $img = $wechat->GetQrcode($scene, 'pages/other/main');
-        $expiresAt = Carbon::now()->addMinutes(5);      // 图片有效期 缓存五分钟
-        Cache::put($scene, $scene, $expiresAt);
+        Cache::put($scene, $scene, Carbon::now()->addMinutes(5));  // 图片有效期 缓存五分钟
+        LoginInfo::create(['scene' => $scene]);
         return response()->json([
-            'status' => 200,
             'scene' => $scene,
             'image' => $img
         ]);
