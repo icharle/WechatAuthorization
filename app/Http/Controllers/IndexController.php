@@ -12,7 +12,7 @@ class IndexController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['CheckAuth']]);
+        $this->middleware('token.refresh', ['except' => ['CheckAuth']]);
     }
 
     /**
@@ -24,12 +24,14 @@ class IndexController extends Controller
         $scene = $request->scene;       // 获取做参数
         $info = LoginInfo::where('scene', $scene)->first();     // 判断是否使用
         if (Cache::get($scene)) {        // 判断是否过期(五分钟时间)
-            if ($info['status'] == 1) {
+            if (isset($info) && $info['status'] == 1) {
                 $info->user();      // 已经授权登录则返回用户信息
-            } else if ($info['status'] == 0) {
+            } else if (isset($info) && $info['status'] == 0) {
                 // 未使用状态
-            } else if ($info['status'] == 2) {
+            } else if (isset($info) && $info['status'] == 2) {
                 // 已经使用(拒接状态) 重新刷新
+            } else {
+                // 随意参数问题
             }
         } else {
             // 重新刷新
@@ -43,5 +45,6 @@ class IndexController extends Controller
     public function WxPutAuth(CheckAuthRequest $request)
     {
         $scene = $request->scene;       // 获取做参数
+        return $scene;
     }
 }

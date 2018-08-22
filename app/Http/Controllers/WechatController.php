@@ -14,7 +14,7 @@ class WechatController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['GetQrcode', 'GetToken']]);
+        $this->middleware('token.refresh', ['except' => ['GetQrcode', 'GetToken']]);
     }
 
     /**
