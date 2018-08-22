@@ -19,5 +19,5 @@ use Illuminate\Http\Request;
 
 Route::group(['middleware' => 'api'], function () {
     Route::get('GetQrcode','WechatController@GetQrcode');
-    Route::post('CheckAuth','IndexController@CheckAuth');
+    Route::post('AuthLogin','WechatController@GetToken');
 });
