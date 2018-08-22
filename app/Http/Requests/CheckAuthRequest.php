@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\UnauthorizedException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class CheckAuthRequest extends FormRequest
@@ -31,8 +30,8 @@ class CheckAuthRequest extends FormRequest
         ];
     }
 
-    protected function failedValidation(Validator $validator)
-    {
-        throw new HttpException(422, '参数不完整');
-    }
+//    protected function failedValidation(Validator $validator)
+//    {
+//        throw new HttpException(422, '参数不完整');
+//    }
 }
