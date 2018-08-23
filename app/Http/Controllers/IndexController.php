@@ -25,7 +25,8 @@ class IndexController extends Controller
         $info = LoginInfo::where('scene', $scene)->first();     // 判断是否使用
         if (Cache::get($scene)) {        // 判断是否过期(五分钟时间)
             if (isset($info) && $info['status'] == 1) {
-                $info->user();      // 已经授权登录则返回用户信息
+                $res = $info->user;      // 已经授权登录则返回用户信息
+                dd($res);
             } else if (isset($info) && $info['status'] == 0) {
                 // 未使用状态
             } else if (isset($info) && $info['status'] == 2) {
@@ -45,6 +46,20 @@ class IndexController extends Controller
     public function WxPutAuth(CheckAuthRequest $request)
     {
         $scene = $request->scene;       // 获取做参数
-        return $scene;
+        $userInfo = Auth::guard('api')->user();
+        $res = LoginInfo::where('scene',$scene)->update(['status' => 1,'openId_id' => $userInfo['openId']]);
+        if ($res){
+            $param['token'] = "1111";
+            $this->curl($param);            // 主动推送消息
+            return response()->json([
+                'status' => 201,
+                'message' => 'Authorized success'
+            ]);
+        }else{
+            return response()->json([
+                'status' => 403,
+                'message' => 'Authorized fail'
+            ]);
+        }
     }
 }

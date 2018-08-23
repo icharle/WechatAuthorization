@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>微信授权平台</title>
+	<script src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
+</head>
+<body>
+	<img src="" class="scan" id="imgId">
+	<div class="text" id="text"></div>
+</body>
+<script type="text/javascript">
+	let scene;
+    $.ajax({
+        url: "http://authorization.test/api/GetQrcode",
+        type: 'get',
+        success: (res => {
+            $("#imgId").attr('src',res.image);
+            $("#text").html(res.scene)
+			this.scene = res.scene
+        }),
+    });
+
+    window.setInterval(function () {
+        $.ajax({
+            url: "http://authorization.test/api/CheckAuth",
+            type: 'post',
+            data: {
+                scene: this.scene
+            },
+            async:true,
+            success: (res => {
+				console.log(res)
+            }),
+        })
+    },1000);
+
+</script>
+</html>

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Redis;
 
 class Swoole extends Command
 {
+    public $ws;
     /**
      * The name and signature of the console command.
      *
@@ -59,24 +60,25 @@ class Swoole extends Command
      */
     private function start()
     {
-        $ws = new swoole_websocket_server("0.0.0.0", 9502);
+        $this->ws = new swoole_websocket_server("0.0.0.0", 9502);
         //监听WebSocket连接打开事件
-        $ws->on('open', function ($ws, $request) {
+        $this->ws->on('open', function ($ws, $request) {
             $this->info("client is open\n");
-            $ws->push($request->fd, "连接成功\n");
+            $this->ws->push($request->fd, "连接成功\n");
         });
         //监听WebSocket消息事件
-        $ws->on('message', function ($ws, $frame) {
+        $this->ws->on('message', function ($ws, $frame) {
             $this->info("client is SendMessage\n");
         });
         //监听WebSocket主动推送消息事件
-        $ws->on('request', function ($request, $response) {
+        $this->ws->on('request', function ($request, $response) {
+            $this->info($request->post['token']);
             $this->info("client is PushMessage\n");
         });
         //监听WebSocket连接关闭事件
-        $ws->on('close', function ($ws, $fd) {
+        $this->ws->on('close', function ($ws, $fd) {
             $this->info("client is close\n");
         });
-        $ws->start();
+        $this->ws->start();
     }
 }
