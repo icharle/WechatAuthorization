@@ -2,8 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\LoginInfo;
-use Icharle\Wxtool\Wxtool;
+use App\Http\Controllers\Controller;
 use Illuminate\Console\Command;
 use swoole_websocket_server;
 use Illuminate\Support\Facades\Redis;
@@ -11,6 +10,7 @@ use Illuminate\Support\Facades\Redis;
 class Swoole extends Command
 {
     public $ws;
+    private $wechat;
     /**
      * The name and signature of the console command.
      *
@@ -32,6 +32,7 @@ class Swoole extends Command
      */
     public function __construct()
     {
+        $this->wechat = new Controller();
         parent::__construct();
     }
 
@@ -67,12 +68,9 @@ class Swoole extends Command
         $this->ws->on('open', function ($ws, $request) {
             $this->info("client is open\n");
             // 生成小程序码
-            $tool = new Wxtool();
-            $scene = uniqid() . mt_rand(100000, 999999);             // 场景值(随机生成)
-            $img = $tool->GetQrcode($scene, 'pages/other/main');
-            LoginInfo::create(['scene' => $scene]);
-            Redis::set($scene,$request->fd);            // 保存场景值对应会话ID
-            $this->ws->push($request->fd, json_encode(['image' => $img]));    // 返回给client端
+            $res = $this->wechat->GetQrcode();
+            Redis::set($res['scene'], $request->fd);            // 保存场景值对应会话ID
+            $this->ws->push($request->fd, json_encode(['image' => $res['image']]));    // 返回给client端
         });
         //监听WebSocket消息事件
         $this->ws->on('message', function ($ws, $frame) {
@@ -80,9 +78,10 @@ class Swoole extends Command
         });
         //监听WebSocket主动推送消息事件
         $this->ws->on('request', function ($request, $response) {
-            $this->info($request->post['scene']);
-            $this->info(Redis::get($request->post['scene']));
-            $this->ws->push(Redis::get($request->post['scene']),json_encode(['userinfo' => 'Icharle','msg' => '登录成功']));
+            $scene = $request->post['scene'];       // 获取场景值
+            $userInfo = $request->post['userInfo'];
+            $this->ws->push(Redis::get($scene), $userInfo);
+            Redis::del($scene);
             $this->info("client is PushMessage\n");
         });
         //监听WebSocket连接关闭事件

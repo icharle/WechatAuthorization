@@ -20,24 +20,6 @@ class WechatController extends Controller
     /**
      * @param Request $request
      * @return mixed
-     * 获取带参数小程序码
-     */
-    public function GetQrcode(Request $request)
-    {
-        $wechat = new Wxtool();
-        $scene = uniqid() . mt_rand(100000, 999999);             // 场景值(随机生成)
-        $img = $wechat->GetQrcode($scene, 'pages/other/main');
-        Cache::put($scene, $scene, Carbon::now()->addMinutes(5));  // 图片有效期 缓存五分钟
-        LoginInfo::create(['scene' => $scene]);
-        return response()->json([
-            'scene' => $scene,
-            'image' => $img
-        ]);
-    }
-
-    /**
-     * @param Request $request
-     * @return mixed
      * 微信授权登录
      */
     public function GetToken(Request $request)
