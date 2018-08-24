@@ -49,7 +49,7 @@ class IndexController extends Controller
         $userInfo = Auth::guard('api')->user();
         $res = LoginInfo::where('scene',$scene)->update(['status' => 1,'openId_id' => $userInfo['openId']]);
         if ($res){
-            $param['token'] = "1111";
+            $param['scene'] = $scene;
             $this->curl($param);            // 主动推送消息
             return response()->json([
                 'status' => 201,

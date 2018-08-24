@@ -7,33 +7,36 @@
 </head>
 <body>
 	<img src="" class="scan" id="imgId">
-	<div class="text" id="text"></div>
 </body>
 <script type="text/javascript">
-	let scene;
-    $.ajax({
-        url: "http://authorization.test/api/GetQrcode",
-        type: 'get',
-        success: (res => {
-            $("#imgId").attr('src',res.image);
-            $("#text").html(res.scene)
-			this.scene = res.scene
-        }),
-    });
+    wsServer = new WebSocket("ws://127.0.0.1:9502");
 
-    window.setInterval(function () {
-        $.ajax({
-            url: "http://authorization.test/api/CheckAuth",
-            type: 'post',
-            data: {
-                scene: this.scene
-            },
-            async:true,
-            success: (res => {
-				console.log(res)
-            }),
-        })
-    },1000);
+    wsServer.onopen = function (evt) {
+        //wsServer.readyState 属性：
+        /*
+         CONNECTING  0   The connection is not yet open.
+         OPEN        1   The connection is open and ready to communicate.
+         CLOSING     2   The connection is in the process of closing.
+         CLOSED      3   The connection is closed or couldn't be opened.
+         */
+        if (wsServer.readyState == 1) {
+            console.log("连接成功！");
+        } else {
+            console.log("连接失败！");
+        }
+	};
 
+    wsServer.onmessage = function (evt) {
+        let data = JSON.parse(evt.data);
+        $("#imgId").attr('src',data.image);
+    };
+
+    wsServer.onclose = function () {
+        console.log("关闭连接！");
+	};
+
+    wsServer.onerror = function () {
+        console.log("未知错误！");
+    };
 </script>
 </html>
