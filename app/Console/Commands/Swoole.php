@@ -66,9 +66,10 @@ class Swoole extends Command
         $this->ws = new swoole_websocket_server("0.0.0.0", 9502);
         //监听WebSocket连接打开事件
         $this->ws->on('open', function ($ws, $request) {
+            $site = $request->get['site'];          // 得到用户ID
             $this->info("client is open\n");
             // 生成小程序码
-            $res = $this->wechat->GetQrcode();
+            $res = $this->wechat->GetQrcode($site);
             Redis::set($res['scene'], $request->fd);            // 保存场景值对应会话ID
             $this->ws->push($request->fd, json_encode(['image' => $res['image']]));    // 返回给client端
         });

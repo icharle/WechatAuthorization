@@ -33,13 +33,12 @@ class Controller extends BaseController
      * @return mixed
      * 获取带参数小程序码
      */
-    public function GetQrcode()
+    public function GetQrcode($site)
     {
         $wechat = new Wxtool();
         $scene = uniqid() . mt_rand(100000, 999999);             // 场景值(随机生成)
         $img = $wechat->GetQrcode($scene, 'pages/other/main');
-//        Cache::put($scene, $scene, Carbon::now()->addMinutes(5));  // 图片有效期 缓存五分钟
-        LoginInfo::create(['scene' => $scene]);
+        LoginInfo::create(['scene' => $scene, 'site' => $site]);
         $arr = array('scene' => $scene, 'image' => $img);
         return $arr;
     }

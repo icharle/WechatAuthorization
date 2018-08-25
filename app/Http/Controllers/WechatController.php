@@ -2,19 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\LoginInfo;
 use App\User;
-use Carbon\Carbon;
 use Icharle\Wxtool\Wxtool;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 
 class WechatController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('token.refresh', ['except' => ['GetQrcode', 'GetToken']]);
+        $this->middleware('token.refresh', ['except' => ['GetToken']]);
     }
 
     /**
