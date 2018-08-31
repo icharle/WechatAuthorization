@@ -49,4 +49,12 @@ class User extends Authenticatable implements JWTSubject
         // TODO: Implement getJWTCustomClaims() method.
         return [];
     }
+
+    /**
+     * 获取该用户对应的所有站点
+     */
+    public function site()
+    {
+        return $this->hasMany('App\SiteInfo', 'openId_id', 'openId');
+    }
 }

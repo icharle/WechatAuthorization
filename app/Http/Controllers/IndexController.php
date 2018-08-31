@@ -15,7 +15,7 @@ class IndexController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('token.refresh');
+        $this->middleware('token.refresh', ['except' => ['UploadFile']]);
     }
 
     /**
