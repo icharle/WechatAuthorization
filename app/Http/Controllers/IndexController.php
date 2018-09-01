@@ -71,4 +71,19 @@ class IndexController extends Controller
             'message' => 'Save success'
         ]);
     }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * 返回该用户的所有站点
+     */
+    public function GetSite(Request $request)
+    {
+        $userInfo = Auth::guard('api')->user();
+        $res = $userInfo->site;
+        return response()->json([
+            'status' => 200,
+            'data' => $res
+        ]);
+    }
 }
