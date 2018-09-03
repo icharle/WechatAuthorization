@@ -55,35 +55,4 @@ class IndexController extends Controller
         Storage::put('/public/logo/' . $filename, file_get_contents($file));  // 保存logo
         return Storage::url('logo/' . $filename);
     }
-
-    /**
-     * @param CheckSiteRequest $request
-     * @return \Illuminate\Http\JsonResponse
-     * 保存站点信息
-     */
-    public function SaveSite(CheckSiteRequest $request)
-    {
-        $data = $request->all();
-        $userInfo = Auth::guard('api')->user();
-        SiteInfo::create(['sitename' => $data['sitename'], 'sitelogo' => $data['sitelogo'], 'sitedesc' => $data['sitedesc'], 'openId_id' => $userInfo['openId']]);
-        return response()->json([
-            'status' => 200,
-            'message' => 'Save success'
-        ]);
-    }
-
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     * 返回该用户的所有站点
-     */
-    public function GetSite(Request $request)
-    {
-        $userInfo = Auth::guard('api')->user();
-        $res = $userInfo->site;
-        return response()->json([
-            'status' => 200,
-            'data' => $res
-        ]);
-    }
 }
