@@ -15,6 +15,7 @@ class CreateSiteInfosTable extends Migration
     {
         Schema::create('site_infos', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('site')->comment('站点ID');
             $table->string('sitename')->comment('站点名称');
             $table->string('sitelogo')->comment('站点logo');
             $table->string('sitedesc')->comment('站点描述');

@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class SiteInfo extends Model
 {
     protected $fillable = [
-        'sitename', 'sitelogo', 'sitedesc', 'openId_id'
+        'site', 'sitename', 'sitelogo', 'sitedesc', 'openId_id'
     ];
 }

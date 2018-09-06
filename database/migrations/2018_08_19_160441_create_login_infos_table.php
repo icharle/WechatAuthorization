@@ -16,7 +16,7 @@ class CreateLoginInfosTable extends Migration
         Schema::create('login_infos', function (Blueprint $table) {
             $table->increments('id');
             $table->string('scene')->index()->comment('场景值');
-            $table->string('site')->comment('站点');
+            $table->string('site_id')->comment('站点');
             $table->string('openId_id')->default('0')->comment('用户唯一值');
             $table->tinyInteger('status')->default(0)->comment('状态值 0为未使用状态 1为授权状态 2为拒接状态');
             $table->timestamps();
