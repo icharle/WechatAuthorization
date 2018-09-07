@@ -21,5 +21,6 @@ Route::group(['middleware' => 'api'], function () {
     Route::post('AuthLogin','WechatController@GetToken');
     Route::post('WxPutAuth','IndexController@WxPutAuth');
     Route::post('UploadFile','IndexController@UploadFile');
+    Route::post('GetSite','IndexController@GetSite');
     Route::resource('sites', 'SiteController');
 });

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class LoginInfo extends Model
 {
     protected $fillable = [
-        'scene', 'site_id', 'openId', 'status'
+        'scene', 'site_id', 'openId_id', 'status'
     ];
 
     /**
@@ -17,5 +17,14 @@ class LoginInfo extends Model
     public function user()
     {
         return $this->belongsTo('App\User', 'openId_id', 'openId');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * 获取场景值关联的站点
+     */
+    public function site()
+    {
+        return $this->belongsTo('App\SiteInfo', 'site_id', 'site');
     }
 }

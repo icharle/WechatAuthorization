@@ -18,6 +18,17 @@ class IndexController extends Controller
         $this->middleware('token.refresh', ['except' => ['UploadFile']]);
     }
 
+    public function GetSite(CheckAuthRequest $request)
+    {
+        $scene = $request->scene;       // 获取做参数
+        $logininfo = LoginInfo::where('scene',$scene)->first();
+        $res = $logininfo->site;
+        return response()->json([
+            'status' => 200,
+            'data' => $res
+        ]);
+    }
+
     /**
      * @param Request $request
      * 小程序端给予权限

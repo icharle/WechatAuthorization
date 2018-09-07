@@ -38,7 +38,7 @@ class Controller extends BaseController
         $wechat = new Wxtool();
         $scene = uniqid() . mt_rand(100000, 999999);             // 场景值(随机生成)
         $img = $wechat->GetQrcode($scene, 'pages/other/main');
-        LoginInfo::create(['scene' => $scene, 'site' => $site]);
+        LoginInfo::create(['scene' => $scene, 'site_id' => $site]);
         $arr = array('scene' => $scene, 'image' => $img);
         return $arr;
     }
