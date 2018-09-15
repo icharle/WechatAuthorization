@@ -49,7 +49,7 @@ class SiteController extends Controller
     {
         $data = $request->all();
         $userInfo = Auth::guard('api')->user();
-        SiteInfo::create(['sitename' => $data['sitename'], 'sitelogo' => $data['sitelogo'], 'sitedesc' => $data['sitedesc'], 'openId_id' => $userInfo['openId']]);
+        SiteInfo::create(['site' => uniqid(),'sitename' => $data['sitename'], 'sitelogo' => $data['sitelogo'], 'sitedesc' => $data['sitedesc'], 'openId_id' => $userInfo['openId']]);
         return response()->json([
             'status' => 200,
             'message' => 'Save success'

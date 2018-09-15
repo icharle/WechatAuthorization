@@ -63,7 +63,11 @@ class Swoole extends Command
      */
     private function start()
     {
-        $this->ws = new swoole_websocket_server("0.0.0.0", 9502);
+        $this->ws = new swoole_websocket_server("0.0.0.0", 9502, SWOOLE_PROCESS, SWOOLE_SOCK_TCP | SWOOLE_SSL);
+        $this->ws->set(array(
+            'ssl_cert_file' => storage_path().'/ssl/fullchain.pem',
+            'ssl_key_file' => storage_path().'/ssl/fullchain.key',
+        ));
         //监听WebSocket连接打开事件
         $this->ws->on('open', function ($ws, $request) {
             $site = $request->get['site'];          // 得到用户ID
