@@ -82,7 +82,8 @@ class Swoole extends Command
             $this->info("client is SendMessage\n");
         });
         //监听WebSocket主动推送消息事件
-        $this->ws->on('request', function ($request, $response) {
+        $port = $this->ws->listen('127.0.0.1', 9501, SWOOLE_SOCK_TCP);
+        $port->on('request', function ($request, $response) {
             $scene = $request->post['scene'];       // 获取场景值
             $userInfo = $request->post['userInfo'];
             $this->ws->push(Redis::get($scene), $userInfo);
