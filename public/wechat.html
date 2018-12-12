@@ -29,6 +29,9 @@
     wsServer.onmessage = function (evt) {
         let data = JSON.parse(evt.data);
         $("#imgId").attr('src',data.image);
+        if (data.id) {
+            alert('登录成功！')
+		}
     };
 
     wsServer.onclose = function () {
