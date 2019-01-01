@@ -45,12 +45,26 @@ $ WX_SECRET =
 $ php artisan storage:link
 
 # 更改Websocket监听端口
-$ 修改app/Console/Swoole.php中第66行，默认为9502端口
+$ 修改app/Console/Swoole.php中第71行，默认为9502端口
 
-# 配置SSL证书，实现wss://xxx.xxx
-$ 修改app/Console/Swoole.php中第68、69行，放置自己域名的证书
-$ 可注释第67-70行，不配置SSL证书
-
+# 配置SSL证书，实现wss://xxx.xxx 
+  
+  # 第①中方法： 原理：通过swoole配置SSL证书  Websocket链接则为:wss://xxx.xxx:9502
+    $ 修改app/Console/Swoole.php中注释71行、并且取消注释66-70行代码
+    $ 修改app/Console/Swoole.php中第68、69行，放置自己域名的证书
+  
+  # 第②中方法：(默认实现) 原理：nginx配置SSL证书，通过nginx反向代理websocket实现  Websocket链接则为:wss://xxx.xxx/websocket
+    $ location /websocket {  # websocket可以随意修改(自定义值)
+    $         proxy_pass http://127.0.0.1:9502; # 9502改为你在swoole中监听的端口
+    $         proxy_http_version 1.1;
+    $         proxy_set_header X-Real-IP $remote_addr;
+    $         proxy_set_header Host $host;
+    $         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    $         proxy_set_header Upgrade $http_upgrade;
+    $         proxy_set_header Connection "Upgrade";
+    $         proxy_set_header X-Real-IP $remote_addr;
+    $ }
+    
 # 启用Websocket并常驻内存(建议用Supervisor 守护进程)
 $ php artisan swoole start
 ```

@@ -9,7 +9,7 @@
 <img src="" class="scan" id="imgId">
 </body>
 <script type="text/javascript">
-    wsServer = new WebSocket("wss://auth.icharle.com?site=5b8a3dfe6f32b");
+    wsServer = new WebSocket("wss://auth.icharle.com/websocket?site=5b8a3dfe6f32b");
 
     wsServer.onopen = function (evt) {
         //wsServer.readyState 属性：
